@@ -316,7 +316,7 @@ AMP/
 
 <div align="center">
 
-| [🌐 网站](https://amp-protocol.org) | [💬 Discord](https://discord.gg/amp-memory) | [🐦 Twitter](https://twitter.com/AMP_Protocol) | [📧 邮箱](mailto:hello@amp-protocol.org) |
+| [🌐 网站](https://amp-protocol.vercel.app) | [💬 Discord](https://discord.gg/amp-memory) | [🐦 Twitter](https://twitter.com/AMP_Protocol) | [📧 邮箱](mailto:hello@amp-protocol.org) |
 |:---:|:---:|:---:|:---:|
 
 </div>

@@ -79,7 +79,7 @@ https://你的用户名.github.io/amp/
 ### 购买域名
 
 推荐域名：
-- `amp-protocol.org` (~$12/年)
+- `amp-protocol.vercel.app` (~$12/年)
 - `amp-protocol.io` (~$35/年)
 - `amp-protocol.com` (~$12/年)
 
@@ -101,7 +101,7 @@ https://你的用户名.github.io/amp/
 
 2. **在 GitHub 配置域名**
    - 访问：https://github.com/你的用户名/amp/settings/pages
-   - Custom domain: `amp-protocol.org`
+   - Custom domain: `amp-protocol.vercel.app`
    - 点击 **Save**
 
 3. **启用 HTTPS**
@@ -158,7 +158,7 @@ git push
 创建 `website/CNAME` 文件：
 
 ```
-amp-protocol.org
+amp-protocol.vercel.app
 ```
 
 提交后 GitHub 会自动配置域名。
