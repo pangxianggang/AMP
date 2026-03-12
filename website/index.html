@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMP - Agent Memory Protocol | 让 AI 拥有记忆</title>
+    <meta name="description" content="AMP 是一个开放的记忆协议标准，让人工智能拥有长期记忆、从错误学习、持续成长的能力">
+    <link rel="icon" type="image/png" href="assets/icon.png">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-outline {
+            border: 2px solid white;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Features Section */
+        .features {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--gray);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            line-height: 1.8;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 2rem;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Integration Section */
+        .integrations {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .integration-logos {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .integration-logo {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .integration-logo h4 {
+            margin-top: 1rem;
+            color: var(--dark);
+        }
+
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .footer-section a:hover {
+            opacity: 1;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                ⚡ AMP
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">特性</a></li>
+                <li><a href="#integrations">集成</a></li>
+                <li><a href="/blog">博客</a></li>
+                <li><a href="/docs">文档</a></li>
+                <li><a href="https://github.com/your-org/amp" target="_blank">GitHub</a></li>
+            </ul>
+            <a href="#get-started" class="btn-primary">快速开始</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>让 AI 拥有记忆</h1>
+        <p>Agent Memory Protocol - 让 AI 从"工具"进化为"伙伴"</p>
+        <div class="hero-buttons">
+            <a href="https://github.com/your-org/amp" class="btn-white">⭐ Star on GitHub</a>
+            <a href="/docs/quickstart" class="btn-outline">📚 阅读文档</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">核心特性</h2>
+        <p class="section-subtitle">AMP 提供完整的记忆系统，让 AI 真正能够学习和成长</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📖</div>
+                <h3>四种记忆类型</h3>
+                <p>受人类认知科学启发：情景记忆、语义记忆、程序记忆、情感记忆，全面模拟人类记忆系统</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>XP/等级成长</h3>
+                <p>AI 通过完成任务获得经验值，不断提升等级，真实可见的能力成长轨迹</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>遗忘曲线</h3>
+                <p>实现艾宾浩斯遗忘曲线，重要的记忆自动强化，琐碎的记忆自然淡化</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>多 Agent 协作</h3>
+                <p>Agent Mesh 网络让多个 AI 互相学习、共享知识、分工协作，形成集体智慧</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>CLI-Anything 集成</h3>
+                <p>与 CLI-Anything 完美集成，让 AI 能够使用 GIMP、Blender、LibreOffice 等真实软件</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>OpenClaw 集成</h3>
+                <p>作为 OpenClaw 操作系统的核心组件，提供技能调用、定时任务、消息路由等能力</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3>80.8</h3>
+                <p>7 天测试综合评分</p>
+            </div>
+            <div class="stat-item">
+                <h3>100%</h3>
+                <p>核心功能测试覆盖</p>
+            </div>
+            <div class="stat-item">
+                <h3>4 种</h3>
+                <p>记忆类型</p>
+            </div>
+            <div class="stat-item">
+                <h3>100%</h3>
+                <p>记忆召回率</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integrations Section -->
+    <section class="integrations" id="integrations">
+        <h2 class="section-title">强大集成</h2>
+        <p class="section-subtitle">与领先的 AI 基础设施无缝集成</p>
+        
+        <div class="integration-logos">
+            <div class="integration-logo">
+                <div style="font-size: 3rem;">🔧</div>
+                <h4>CLI-Anything</h4>
+                <p style="color: var(--gray); margin-top: 0.5rem;">让 AI 使用真实软件</p>
+            </div>
+            
+            <div class="integration-logo">
+                <div style="font-size: 3rem;">⚙️</div>
+                <h4>OpenClaw</h4>
+                <p style="color: var(--gray); margin-top: 0.5rem;">AI 操作系统</p>
+            </div>
+            
+            <div class="integration-logo">
+                <div style="font-size: 3rem;">💾</div>
+                <h4>Memory Bank</h4>
+                <p style="color: var(--gray); margin-top: 0.5rem;">向量数据库</p>
+            </div>
+            
+            <div class="integration-logo">
+                <div style="font-size: 3rem;">📁</div>
+                <h4>火星文件管理</h4>
+                <p style="color: var(--gray); margin-top: 0.5rem;">事务性存储</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="get-started">
+        <h2>准备好开始了吗？</h2>
+        <p>立即体验 AMP，让你的 AI 拥有真正的记忆和成长能力</p>
+        <div class="hero-buttons">
+            <a href="https://github.com/your-org/amp" class="btn-white">🚀 开始使用</a>
+            <a href="/docs" class="btn-outline">📖 查看文档</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>AMP</h4>
+                <p style="opacity: 0.8; line-height: 1.8;">
+                    Agent Memory Protocol<br>
+                    Every AI deserves to remember.
+                </p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>资源</h4>
+                <ul>
+                    <li><a href="/docs">文档</a></li>
+                    <li><a href="/blog">博客</a></li>
+                    <li><a href="/examples">示例</a></li>
+                    <li><a href="/api">API 参考</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>社区</h4>
+                <ul>
+                    <li><a href="https://github.com/your-org/amp" target="_blank">GitHub</a></li>
+                    <li><a href="https://discord.gg/amp-memory" target="_blank">Discord</a></li>
+                    <li><a href="https://twitter.com/AMP_Protocol" target="_blank">Twitter</a></li>
+                    <li><a href="mailto:hello@amp-protocol.org">邮箱</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>法律</h4>
+                <ul>
+                    <li><a href="/privacy">隐私政策</a></li>
+                    <li><a href="/terms">使用条款</a></li>
+                    <li><a href="/license">许可证</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 AMP Contributors. MIT License.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animate on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card, .integration-logo').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
