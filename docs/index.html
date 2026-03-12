@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMP 文档 - 快速开始</title>
+    <meta name="description" content="AMP 快速开始指南，5 分钟上手 AI 记忆系统">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+        
+        .docs-header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 6rem 2rem 4rem;
+            text-align: center;
+        }
+        
+        .docs-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .docs-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 3rem;
+        }
+        
+        .docs-sidebar {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        
+        .docs-sidebar h3 {
+            color: #1e293b;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #6366f1;
+            padding-bottom: 0.5rem;
+        }
+        
+        .docs-sidebar ul {
+            list-style: none;
+        }
+        
+        .docs-sidebar li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .docs-sidebar a {
+            color: #475569;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .docs-sidebar a:hover,
+        .docs-sidebar a.active {
+            color: #6366f1;
+            font-weight: 600;
+        }
+        
+        .docs-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .docs-content h2 {
+            color: #6366f1;
+            font-size: 2rem;
+            margin: 2rem 0 1rem;
+        }
+        
+        .docs-content h3 {
+            color: #4f46e5;
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .docs-content p {
+            color: #475569;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .docs-content code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #4f46e5;
+        }
+        
+        .docs-content pre {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+        
+        .docs-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+        
+        .step-box {
+            background: #e0e7ff;
+            border-left: 4px solid #6366f1;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+        
+        .step-box h4 {
+            color: #4f46e5;
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .docs-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="docs-header">
+        <h1>📚 AMP 文档</h1>
+        <p>完整的安装和使用指南</p>
+    </div>
+    
+    <div class="docs-container">
+        <div class="docs-sidebar">
+            <h3>目录</h3>
+            <ul>
+                <li><a href="#installation" class="active">1. 安装</a></li>
+                <li><a href="#quickstart">2. 快速开始</a></li>
+                <li><a href="#memory-types">3. 记忆类型</a></li>
+                <li><a href="#agent-mesh">4. Agent Mesh</a></li>
+                <li><a href="#integrations">5. 集成</a></li>
+                <li><a href="#api">6. API 参考</a></li>
+            </ul>
+            
+            <h3 style="margin-top: 2rem;">联系方式</h3>
+            <p style="color: #64748b; font-size: 0.9rem;">
+                📧 13378455743@163.com<br>
+                💬 Discord 社区<br>
+                🐦 Twitter
+            </p>
+        </div>
+        
+        <div class="docs-content">
+            <h2 id="installation">1. 安装</h2>
+            
+            <h3>环境要求</h3>
+            <ul>
+                <li>Python 3.10+</li>
+                <li>pip 包管理器</li>
+            </ul>
+            
+            <h3>安装步骤</h3>
+            
+            <div class="step-box">
+                <h4>步骤 1: 安装 AMP</h4>
+                <pre><code>pip install amp-protocol</code></pre>
+            </div>
+            
+            <div class="step-box">
+                <h4>步骤 2: 验证安装</h4>
+                <pre><code>python -c "import amp; print(f'AMP 版本：{amp.__version__}')"</code></pre>
+                <p>输出：<code>AMP 版本：1.0.0</code></p>
+            </div>
+            
+            <h2 id="quickstart">2. 快速开始</h2>
+            
+            <h3>创建第一个 Agent</h3>
+            
+            <pre><code>import amp
+import asyncio
+
+async def main():
+    # 创建 Agent
+    agent = amp.Agent(
+        name="小助手",
+        role="assistant",
+        language="zh"
+    )
+    
+    # 存储记忆
+    await agent.memory.remember(
+        "用户喜欢中文回复",
+        type=amp.MemoryType.SEMANTIC,
+        importance=10
+    )
+    
+    # 回忆记忆
+    memories = await agent.memory.recall("用户偏好")
+    for mem in memories:
+        print(f"记得：{mem.content}")
+
+asyncio.run(main())</code></pre>
+            
+            <h3>运行结果</h3>
+            <pre><code>记得：用户喜欢中文回复</code></pre>
+            
+            <h2 id="memory-types">3. 记忆类型</h2>
+            
+            <p>AMP 提供四种记忆类型：</p>
+            
+            <table style="width: 100%; border-collapse: collapse; margin: 2rem 0;">
+                <thead>
+                    <tr style="background: #e0e7ff;">
+                        <th style="padding: 1rem; text-align: left; border: 1px solid #cbd5e1;">类型</th>
+                        <th style="padding: 1rem; text-align: left; border: 1px solid #cbd5e1;">说明</th>
+                        <th style="padding: 1rem; text-align: left; border: 1px solid #cbd5e1;">示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid #cbd5e1;">📖 情景记忆</td>
+                        <td style="padding: 1rem; border: 1px solid #cbd5e1;">发生了什么</td>
+                        <td style="padding: 1rem; border: 1px solid #cbd5e1;">"2026-03-12 讨论 AMP 架构"</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid #cbd5e1;">💡 语义记忆</td>
+                        <td style="padding: 1rem; border: 1px solid #cbd5e1;">知道什么</td>
+                        <td style="padding: 1rem; border: 1px solid #cbd5e1;">"用户喜欢中文"</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid #cbd5e1;">🔧 程序记忆</td>
+                        <td style="padding: 1rem; border: 1px solid #cbd5e1;">如何做</td>
+                        <td style="padding: 1rem; border: 1px solid #cbd5e1;">"部署步骤：1) 安装 2) 配置"</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid #cbd5e1;">❤️ 情感记忆</td>
+                        <td style="padding: 1rem; border: 1px solid #cbd5e1;">什么有效/无效</td>
+                        <td style="padding: 1rem; border: 1px solid #cbd5e1;">"异步编程提升性能 (+)"</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2 id="agent-mesh">4. Agent Mesh</h2>
+            
+            <h3>创建多 Agent 团队</h3>
+            
+            <pre><code>import amp
+
+async def team_work():
+    # 创建团队
+    researcher = amp.Agent(name="探索者", role="researcher")
+    writer = amp.Agent(name="记录员", role="writer")
+    
+    # Mesh 网络
+    mesh = amp.AgentMesh()
+    await mesh.register(researcher)
+    await mesh.register(writer)
+    
+    # 团队任务
+    result = await mesh.team_task(
+        task={"description": "研究 AI 框架"},
+        agents=[researcher, writer]
+    )
+    
+    # 知识传承
+    await writer.learn_from(researcher, topic="AI")</code></pre>
+            
+            <h2 id="integrations">5. 集成</h2>
+            
+            <h3>CLI-Anything 集成</h3>
+            
+            <pre><code>import amp
+import subprocess
+
+async def use_gimp():
+    designer = amp.Agent(name="设计师", role="designer")
+    
+    # 调用 GIMP CLI
+    subprocess.run([
+        "cli-anything-gimp",
+        "project", "new",
+        "--width", "1920",
+        "--height", "1080"
+    ])
+    
+    # 记录经验
+    await designer.memory.remember(
+        "1920x1080 是海报最佳尺寸",
+        type=amp.MemoryType.PROCEDURAL,
+        importance=9
+    )</code></pre>
+            
+            <h3>OpenClaw 集成</h3>
+            
+            <pre><code>import amp
+
+async def use_skill():
+    agent = amp.Agent(
+        name="助手",
+        role="assistant",
+        enable_openclaw=True
+    )
+    
+    # 使用 serper 搜索技能
+    result = await agent.use_skill(
+        "serper",
+        query="Python 异步编程"
+    )</code></pre>
+            
+            <h2 id="api">6. API 参考</h2>
+            
+            <h3>Agent 类</h3>
+            
+            <pre><code>class Agent:
+    def __init__(
+        self,
+        name: str,
+        role: str,
+        language: str = "zh",
+        storage_dir: Optional[str] = None,
+        enable_fm: bool = False,
+        enable_memory_bank: bool = False,
+        enable_openclaw: bool = False
+    )
+    
+    async def initialize() -> None
+    async def act(task: Dict[str, Any]) -> Dict[str, Any]
+    async def use_skill(skill_name: str, **kwargs) -> Dict[str, Any]
+    async def learn_from(other_agent, topic: str = None) -> int
+    async def sleep() -> Dict[str, int]
+    status() -> Dict[str, Any]</code></pre>
+            
+            <h3>Memory 类</h3>
+            
+            <pre><code>class AgentMemory:
+    async def remember(
+        content: str,
+        type: MemoryType,
+        importance: int = 5,
+        tags: List[str] = None
+    ) -> Memory
+    
+    async def recall(
+        query: str,
+        type: MemoryType = None,
+        limit: int = 10
+    ) -> List[Memory]
+    
+    async def consolidate() -> Dict[str, int]
+    count() -> int
+    stats() -> Dict[str, Any]</code></pre>
+            
+            <div style="text-align: center; margin: 3rem 0;">
+                <a href="/" style="display: inline-block; background: #6366f1; color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                    ← 返回首页
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
