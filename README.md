@@ -1,207 +1,204 @@
-<div align="center">
+# AMP v2.0 — Agent Memory Protocol
 
-# ⚡ AMP — Agent Memory Protocol
+> 零依赖的 AI Agent 记忆协议，让 AI 拥有像人一样的记忆系统。
 
-### 🧠 让 AI 拥有记忆，让 Agent 真正成长
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-green.svg)](https://www.python.org/)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+## 为什么需要 AMP？
 
-**English** · [简体中文](README_CN.md)
+当前 AI Agent 面临一个根本问题：**没有真正的记忆**。每次对话结束，一切都忘记了。
 
-</div>
+ChatGPT 有 Memory 功能，但它锁在 OpenAI 的生态里。LangChain 有 Memory 模块，但它需要向量数据库、Embedding 模型等一堆依赖。
 
----
+**AMP 的做法不同：**
 
-## 🔍 什么是 AMP?
+- **零外部依赖** — 纯 Python 标准库，复制就能用
+- **认知科学基础** — 工作记忆 / 短期记忆 / 长期记忆三层架构
+- **质量保证** — 新记忆默认不可信，通过验证才能晋升
+- **标准化格式** — `.amp` 文件让记忆可以在不同 Agent 之间迁移
 
-AMP (Agent Memory Protocol) 是一个开放的记忆协议标准，为 AI Agent 提供**长期记忆**、**从错误学习**、**持续成长**的能力。
-
-### 为什么需要 AMP?
-
-| ❌ 当前 AI 的困境 | ✅ AMP 的解决方案 |
-|------------------|------------------|
-| 每次对话都是初次见面 | 🧠 持久化记忆，AI 记住每个用户 |
-| 无法从错误中学习 | 📈 情感记忆记录成功/失败经验 |
-| 经验无法积累和传承 | 🎮 XP/等级系统，AI 不断成长 |
-| 多个 AI 之间信息孤岛 | 🕸️ Agent Mesh，知识共享传承 |
-
----
-
-## ✨ 核心特性
-
-- **🧠 四种记忆类型** — 情景、语义、程序、情感，模拟人类认知科学
-- **📈 成长系统** — XP 经验值 + 等级晋升，越用越强
-- **⏳ 遗忘曲线** — 基于艾宾浩斯遗忘曲线，自然管理记忆强度
-- **🔗 多 Agent 协作** — Agent Mesh 网络，知识共享与传承
-- **⚡ 高性能** — 本地存储，响应延迟 < 0.02ms
-- **🔒 数据安全** — 隐私优先，数据不离开本地
-
----
-
-## 🚀 快速开始
-
-### 安装
-
-```bash
-# 从 PyPI 安装
-pip install amp-protocol
-
-# 或从源码安装
-git clone https://github.com/pangxianggang/AMP.git
-cd AMP/sdk/python
-pip install -e .
-```
-
-### 创建你的第一个 Agent
+## 快速开始
 
 ```python
 import asyncio
 from amp import Agent, MemoryType
 
 async def main():
-    agent = Agent(name="Ali", role="project_manager", language="zh")
+    # 创建 Agent（自动持久化到 ~/.amp/）
+    agent = Agent(name="Ali", role="project_manager")
 
-    # 存储记忆
-    await agent.memory.remember(
-        "用户喜欢中文回复",
+    # 记住信息
+    await agent.remember(
+        "用户偏好中文沟通",
         type=MemoryType.SEMANTIC,
         importance=8
     )
 
     # 回忆
-    memories = await agent.memory.recall("用户偏好")
-    print(f"记忆：{memories[0].content}")
+    memories = await agent.recall("用户偏好")
+    for m in memories:
+        print(f"[{m.tier.value}] {m.content}")
 
-    # 执行任务
-    result = await agent.act({"description": "规划项目结构"})
-    print(f"任务结果：{result}")
+    # 导出记忆（可迁移到其他 Agent）
+    agent.memory.export("ali_knowledge.amp")
 
-if __name__ == "__main__":
-    asyncio.run(main())
+    # Agent 会自动成长
+    await agent.act({"description": "完成任务"})
+    print(f"Level: {agent.identity.level}, XP: {agent.identity.experience_points}")
+
+asyncio.run(main())
 ```
 
-### 运行测试
+## 核心特性
+
+### 1. 记忆分层
+
+模仿人类认知系统：
+
+| 层级 | 容量 | TTL | 晋升条件 |
+|------|------|-----|----------|
+| 工作记忆 (Working) | 10 条 | 1 小时 | importance ≥ 6 |
+| 短期记忆 (Short-term) | 100 条 | 7 天 | importance ≥ 8 或访问 ≥ 5 次 |
+| 长期记忆 (Long-term) | 无限 | 永久 | — |
+
+### 2. 记忆质量保证
+
+新记忆不是直接可信的。它们以「候选」状态进入系统 (confidence=0.50)，必须通过使用验证：
+
+```
+0.50 (候选) → 0.64 → 0.80 (已验证) → 0.92 (高可信) → 0.96 → 0.98
+```
+
+这防止了 AI 幻觉产生的假信息被当作事实。
+
+**冲突检测**自动识别：
+- 重复记忆（完全相同的内容）
+- 替代记忆（新版本覆盖旧版本）
+- 矛盾记忆（互相冲突的信息）
+
+### 3. 认知遗忘
+
+基于艾宾浩斯遗忘曲线，但做了改进：
+
+```
+strength = 重要性(0.4) + 访问频率(0.25) + 新近度(0.25) + 信心(0.1)
+```
+
+- 默认半衰期：14 天
+- 重要且常访问的记忆保持高强度
+- 不重要的记忆自然衰减、归档、删除
+- 类似人类「睡眠巩固」的 `sleep()` 方法
+
+### 4. 记忆可移植性
+
+`.amp` 文件是标准化的记忆交换格式：
+
+```python
+# 导出
+agent.memory.export("knowledge.amp", include_candidates=False)
+
+# 导入（三种模式）
+agent.memory.import_from("knowledge.amp", mode="candidate")  # 作为候选
+agent.memory.import_from("knowledge.amp", mode="merge")      # 合并
+agent.memory.import_from("knowledge.amp", mode="replace")    # 替换
+```
+
+### 5. 中英文搜索
+
+无需 NLP 库，内置分词器：
+- 中文：字符 bigram/trigram
+- 英文：单词切分 + 停用词过滤
+- 混合文本自动处理
+
+### 6. Agent Mesh（多智能体协作）
+
+```python
+mesh = AgentMesh()
+await mesh.register(researcher)
+await mesh.register(writer)
+
+# 知识共享（带质量保证）
+await mesh.share_knowledge(researcher, [writer], topic="AI")
+
+# 团队任务
+await mesh.team_task({"description": "写研究报告"})
+```
+
+### 7. 四种记忆类型
+
+| 类型 | 说明 | 示例 |
+|------|------|------|
+| Episodic (情景) | 具体事件和经历 | "上次会议讨论了预算问题" |
+| Semantic (语义) | 知识和事实 | "Python 3.12 新增了 type参数语法" |
+| Procedural (程序) | 操作方法和技能 | "部署流程: build → test → deploy" |
+| Emotional (情感) | 情感和偏好 | "用户对延迟交付感到不满" |
+
+## 项目结构
+
+```
+amp/
+├── __init__.py              # 版本 2.0.0，导出核心类
+├── agent.py                 # Agent + AgentMemory
+├── memory/
+│   ├── types.py             # Memory/MemoryType/MemoryTier
+│   ├── store.py             # JSON 文件存储
+│   ├── recall.py            # 中英文搜索
+│   ├── forgetting.py        # 艾宾浩斯遗忘曲线 v2
+│   └── quality.py           # 质量保证 + 冲突检测
+├── mesh/
+│   └── __init__.py          # Agent Mesh 多智能体协作
+└── export/
+    ├── __init__.py
+    └── json_export.py       # .amp 标准格式
+tests/
+└── test_all.py              # 61 项测试
+```
+
+## 与其他方案的对比
+
+| 特性 | AMP | ChatGPT Memory | LangChain Memory | Mem0 | MemGPT |
+|------|-----|----------------|------------------|------|--------|
+| 零依赖 | ✅ | ❌ | ❌ | ❌ | ❌ |
+| 记忆分层 | ✅ | ❌ | 部分 | ❌ | ✅ |
+| 质量保证 | ✅ | ❌ | ❌ | ✅ | ❌ |
+| 标准化导出 | ✅ | ❌ | ❌ | ❌ | ❌ |
+| 认知遗忘 | ✅ | ❌ | ❌ | ❌ | ✅ |
+| 开源 | ✅ | ❌ | ✅ | ✅ | ✅ |
+| 需要 GPU | ❌ | 云端 | 可选 | 可选 | 可选 |
+
+## 本地测试
 
 ```bash
-cd tests
-python -m pytest
+# 零安装，直接运行
+python tests/test_all.py
 ```
 
----
+测试覆盖：
+- 数据模型与序列化
+- 中英文分词器
+- 艾宾浩斯遗忘曲线
+- 质量检测与冲突识别
+- Agent 创建与持久化
+- 任务执行与 XP 升级
+- 记忆分层与晋升
+- 导出/导入 (.amp 格式)
+- Agent Mesh 知识共享
+- 记忆巩固（睡眠）
 
-## 🧠 记忆系统
+## 设计文档
 
-AMP 的记忆系统受人类认知科学启发，设计了四种记忆类型：
+- [协议规范](VISION.md)
+- [快速入门](QUICKSTART.md)
+- [贡献指南](CONTRIBUTING.md)
 
-| 类型 | 名称 | 说明 | 示例 |
-|------|------|------|------|
-| 📖 | **情景记忆** (Episodic) | 记录事件和经历 | "与用户讨论了 AMP 架构设计" |
-| 💡 | **语义记忆** (Semantic) | 存储事实和概念 | "用户偏好直接高效的沟通风格" |
-| 🔧 | **程序记忆** (Procedural) | 技能和操作方法 | "部署流程：安装 → 配置 → 启动" |
-| ❤️ | **情感记忆** (Emotional) | 带价值的经验 | "异步方案显著提升了性能 ✅" |
+## 诚实声明
 
-### 遗忘曲线
+- ⭐ 0 stars — 这是一个真实的新项目
+- 📦 尚未发布到 PyPI — 不能 `pip install`，需要手动复制
+- 🔍 搜索是关键词匹配，不是向量搜索（可选扩展）
+- 🧪 61 项测试全部通过，但还需要更多边界测试
 
-记忆强度遵循**艾宾浩斯遗忘曲线**，支持记忆巩固：
+## License
 
-```python
-# 记忆巩固（类似人类睡眠）
-await agent.sleep()  # 整理记忆，强化重要的，淡化琐碎的
-```
-
----
-
-## 🤝 多 Agent 协作
-
-```python
-import asyncio
-from amp import Agent, AgentMesh
-
-async def team_work():
-    researcher = Agent(name="Researcher", role="researcher")
-    writer = Agent(name="Writer", role="writer")
-
-    mesh = AgentMesh()
-    await mesh.register(researcher)
-    await mesh.register(writer)
-
-    # 团队协作
-    result = await mesh.team_task(
-        task={"description": "Research AI frameworks", "importance": 8},
-        agents=[researcher, writer]
-    )
-
-    # 知识传承
-    await writer.learn_from(researcher, topic="AI frameworks")
-
-asyncio.run(team_work())
-```
-
----
-
-## 🏗️ 架构设计
-
-```
-┌─────────────────────────────────────────────────────┐
-│                    用户层                             │
-└─────────────────────────────────────────────────────┘
-                        ↕
-┌─────────────────────────────────────────────────────┐
-│           AMP (Agent Memory Protocol)                │
-│  Agent Identity │ 4 Memory Types │ Agent Mesh │ Ebbinghaus │
-│  ┌──────────┐   ┌──────────┐   ┌──────────┐         │
-│  │  Storage  │   │ Memory   │   │   CLI-    │         │
-│  │ (JSON/DB) │   │ (Vector) │   │ Anything │         │
-│  └──────────┘   └──────────┘   └──────────┘         │
-└─────────────────────────────────────────────────────┘
-```
-
----
-
-## 📁 项目结构
-
-```
-AMP/
-├── protocol/              # 协议规范
-│   ├── spec/              # 规范文档
-│   └── schemas/           # JSON Schema
-├── sdk/python/amp/        # Python SDK
-│   ├── agent.py           # Agent 核心
-│   ├── memory.py          # 记忆系统
-│   ├── mesh.py            # Agent Mesh
-│   └── ...
-├── integrations/          # 集成模块
-├── config/                # 配置文件
-├── tests/                 # 测试套件
-├── docs/                  # 文档 & 网站
-├── examples/              # 示例代码
-├── LICENSE                # MIT
-└── README.md
-```
-
----
-
-## 🤝 贡献
-
-欢迎贡献！请查看 [CONTRIBUTING.md](CONTRIBUTING.md) 了解详情。
-
-1. Fork 本项目
-2. 创建特性分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add amazing feature'`)
-4. 推送分支 (`git push origin feature/amazing-feature`)
-5. 开启 Pull Request
-
----
-
-## 📄 License
-
-[MIT](LICENSE) © 2026 pangxianggang
-
----
-
-<div align="center">
-
-**Every AI deserves to remember.**
-
-</div>
+MIT License — 自由使用、修改和分发。
