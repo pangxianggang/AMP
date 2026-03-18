@@ -287,3 +287,313 @@ git push
 ---
 
 *Every AI deserves to remember.*
+
+
+---
+
+## Additional Notes from 手动部署指南.md
+
+# 🚀 AMP 手动部署指南
+
+**由于网络连接问题，请按以下步骤手动部署**
+
+---
+
+## ⚡ 快速部署（推荐）
+
+### 第 1 步：打开 Git Bash 或 PowerShell
+
+```powershell
+cd "C:\Users\Administrator\Desktop\AMPAgent Memory Protocol"
+```
+
+### 第 2 步：推送代码到 GitHub
+
+**方式 A：使用 HTTPS（推荐）**
+
+```powershell
+# 如果提示输入密码，使用 Personal Access Token
+# 获取 Token: https://github.com/settings/tokens
+
+git push -u origin main
+```
+
+**方式 B：使用 SSH（如果您配置了 SSH）**
+
+```powershell
+# 先更改远程地址
+git remote set-url origin git@github.com:pangxianggang/AMP.git
+
+# 然后推送
+git push -u origin main
+```
+
+---
+
+## 🔑 如果遇到认证问题
+
+### 获取 Personal Access Token
+
+1. 访问：https://github.com/settings/tokens
+2. 点击 "Generate new token (classic)"
+3. Note: 输入 `AMP Deployment`
+4. 勾选权限：
+   - ✅ repo (Full control of private repositories)
+   - ✅ workflow
+   - ✅ write:packages
+5. 点击 "Generate token"
+6. **复制 Token**（只显示一次！）
+
+### 使用 Token 推送
+
+```powershell
+# 推送时会提示输入用户名和密码
+# Username: pangxianggang
+# Password: 粘贴刚才复制的 Token（不会显示）
+git push -u origin main
+```
+
+---
+
+## 🌐 开启 GitHub Pages
+
+### 推送成功后
+
+1. **访问仓库设置**
+   ```
+   https://github.com/pangxianggang/AMP/settings/pages
+   ```
+
+2. **配置 Pages**
+   - Source: Deploy from a branch
+   - Branch: **main**
+   - Folder: **/website** ⚠️（重要！）
+   - 点击 **Save**
+
+3. **等待 1-2 分钟**
+
+4. **完成！**
+   
+   网站地址：
+   ```
+   https://pangxianggang.github.io/AMP/
+   ```
+
+---
+
+## 📊 检查部署状态
+
+### 查看推送是否成功
+
+访问：https://github.com/pangxianggang/AMP
+
+应该看到所有文件。
+
+### 查看 Pages 部署状态
+
+访问：https://github.com/pangxianggang/AMP/actions
+
+应该看到 "Pages build and deployment" 正在进行。
+
+---
+
+## ⚠️ 常见问题
+
+### Q: 推送时提示 "Permission denied"
+
+**A**: 使用 Personal Access Token
+```
+https://github.com/settings/tokens
+```
+
+### Q: 推送时提示 "Empty reply from server"
+
+**A**: 网络问题，稍后重试
+```powershell
+# 重试推送
+git push -u origin main
+```
+
+### Q: Pages 部署失败
+
+**A**: 检查是否选择了正确的文件夹
+- Branch: main
+- Folder: /website
+
+---
+
+## 📞 需要帮助？
+
+- **GitHub 文档**: https://docs.github.com/pages
+- **仓库地址**: https://github.com/pangxianggang/AMP
+- **邮箱**: 13378455743@163.com
+
+---
+
+## 🎉 部署完成后
+
+**网站地址**: 
+```
+https://pangxianggang.github.io/AMP/
+```
+
+**分享链接**:
+- Twitter
+- 朋友圈
+- 技术社区
+- Product Hunt
+
+---
+
+*Every AI deserves to remember.*
+
+
+---
+
+## Additional Notes from 网站部署最终方案.md
+
+# 🌐 GitHub Pages 部署最终解决方案
+
+**问题**: GitHub Pages 无法访问
+
+**原因**: 
+1. GitHub Actions 未启用
+2. 文件夹设置不正确
+3. 网络连接不稳定
+
+---
+
+## ✅ 解决方案（3 选 1）
+
+### 方案 A：使用根目录（推荐）⭐⭐⭐
+
+**步骤**:
+
+1. **在 GitHub Pages 设置页面**:
+   https://github.com/pangxianggang/AMP/settings/pages
+
+2. **配置**:
+   ```
+   Source: Deploy from a branch
+   Branch: main
+   Folder: / (root)  ← 选择根目录
+   ```
+
+3. **点击 Save**
+
+4. **等待 2-3 分钟**
+
+5. **访问**:
+   ```
+   https://pangxianggang.github.io/AMP/website/index.html
+   ```
+
+---
+
+### 方案 B：启用 GitHub Actions（备选）⭐⭐
+
+**步骤**:
+
+1. **访问 Actions**:
+   https://github.com/pangxianggang/AMP/actions
+
+2. **启用 Actions**:
+   - 点击 "set up a workflow yourself"
+   - 或者选择一个模板
+
+3. **创建简单的部署工作流**:
+   - 选择 "Static HTML"
+   - 点击 "Configure"
+   - 点击 "Start commit"
+   - 点击 "Commit changes"
+
+4. **等待部署完成**
+
+5. **访问**:
+   ```
+   https://pangxianggang.github.io/AMP/
+   ```
+
+---
+
+### 方案 C：手动推送（最复杂）⭐
+
+**步骤**:
+
+1. **在本地执行**:
+   ```powershell
+   cd "C:\Users\Administrator\Desktop\AMPAgent Memory Protocol"
+   git push --set-upstream origin main
+   ```
+
+2. **如果失败，检查网络**
+
+3. **重试直到成功**
+
+4. **然后在 GitHub Pages 设置中选择**:
+   - Branch: main
+   - Folder: /website
+
+---
+
+## 🎯 我的建议
+
+**使用方案 A：选择根目录，然后访问 `/website/index.html`**
+
+**原因**:
+- ✅ 最简单
+- ✅ 不需要启用 Actions
+- ✅ 立即生效
+
+**访问地址**:
+```
+https://pangxianggang.github.io/AMP/website/index.html
+```
+
+---
+
+## 📋 完整检查清单
+
+- [ ] 访问 GitHub Pages 设置
+- [ ] 选择 main 分支
+- [ ] 选择 / (root) 文件夹
+- [ ] 点击 Save
+- [ ] 等待 2-3 分钟
+- [ ] 访问 https://pangxianggang.github.io/AMP/website/index.html
+- [ ] 确认网站正常显示
+
+---
+
+## 🐛 如果还是不行
+
+### 检查网络
+```powershell
+ping github.com
+ping pangxianggang.github.io
+```
+
+### 清除浏览器缓存
+```
+Ctrl + Shift + Delete
+选择"缓存的图像和文件"
+点击"清除数据"
+```
+
+### 使用隐私模式
+```
+Ctrl + Shift + N (Chrome)
+Ctrl + Shift + P (Firefox)
+```
+
+---
+
+## 📞 需要帮助？
+
+如果以上方案都不行，请告诉我：
+1. GitHub Pages 设置的截图
+2. 访问网站时的错误信息
+3. 浏览器控制台错误（F12）
+
+---
+
+*Every AI deserves to remember.*
